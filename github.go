@@ -44,6 +44,10 @@ func (c *GithubConfig) ListRepositories() ([]*Repository, error) {
 	}
 	out := make([]*Repository, 0, len(repos))
 	for _, repo := range repos {
+		if repo.GetArchived() {
+		    log.Printf("Skipping archived repository: %s\n", repo.GetName())
+		    continue
+		}
 		gitUrl, err := url.Parse(*repo.CloneURL)
 		if err != nil {
 			return out, err
