@@ -1,3 +1,10 @@
+FROM golang:1.24 as builder
+
+WORKDIR /app
+COPY . .
+RUN go get github.com/google/go-github/v76/github
+RUN go build -o git-backup ./cmd/git-backup
+
 FROM alpine:3
 
 ARG TARGETPLATFORM
@@ -6,7 +13,9 @@ VOLUME /backups
 
 RUN apk add --no-cache libc6-compat
 
-ADD ${TARGETPLATFORM}/git-backup /
+COPY --from=builder /app/git-backup /git-backup
+
+#ADD ${TARGETPLATFORM}/git-backup /
 RUN chmod +x /git-backup
 
 ## Add the user for command execution

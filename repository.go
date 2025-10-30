@@ -44,6 +44,7 @@ func (r *Repository) CloneInto(path string, bare bool) error {
 		URL:      r.GitURL.String(),
 		Auth:     auth,
 		Progress: os.Stdout,
+		Depth: 99999,
 	})
 
 	if errors.Is(err, git.ErrRepositoryAlreadyExists) {
